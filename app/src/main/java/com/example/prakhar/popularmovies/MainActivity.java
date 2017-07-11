@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progressBar);
         mErrorMessage = (TextView) findViewById(R.id.error_message);
 
+        loadMoviesList();
+
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -49,13 +51,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), movie.getTitle() + "is selected!", Toast.LENGTH_SHORT).show();
             }
         }));
-        
-        loadMoviesList();
     }
 
     private void loadMoviesList() {
         showMoviesDataView();
-        new FetchMoviesTask().execute();
+        new FetchMoviesTask().execute(createMoviesUri());
     }
 
     private void showMoviesDataView() {
@@ -68,21 +68,19 @@ public class MainActivity extends AppCompatActivity {
         mErrorMessage.setVisibility(View.VISIBLE);
     }
 
+    private String  createMoviesUri(){
+        Uri uri = null;
+        uri = Uri.parse(POPULAR_MOVIES_BASE_URL);
+
+        Uri api_uri = null;
+        api_uri = uri.buildUpon()
+                .appendQueryParameter("api_key", "de5ea3329b4b66e12ecf3e79737fa82b")
+                .build();
+
+        return api_uri.toString();
+    }
+
     public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>>{
-
-        private String  createMoviesUri(){
-            Uri uri = null;
-            uri = Uri.parse(POPULAR_MOVIES_BASE_URL);
-
-            Uri api_uri = null;
-            api_uri = uri.buildUpon()
-                    .appendQueryParameter("api_key", "de5ea3329b4b66e12ecf3e79737fa82b")
-                    .build();
-
-
-
-            return api_uri.toString();
-        }
 
         @Override
         protected void onPreExecute() {
@@ -96,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
             }
 
-            List<Movie> movies = MovieUtils.fetchMovieData(createMoviesUri());
+            List<Movie> movies = MovieUtils.fetchMovieData(params[0]);
             return movies;
         }
 
