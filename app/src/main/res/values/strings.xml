@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PopularMovies</string>
+    <string name="no_movies_found">No Movies Found.</string>
+</resources>
