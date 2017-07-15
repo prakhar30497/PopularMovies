@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_backdrop"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitXY"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/scrim"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/scrim"/>
+
+        <ImageView
+            android:id="@+id/iv_movie_poster"
+            android:transitionName="movie poster"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="174dp"
+            android:clickable="true"
+            android:scaleType="fitXY"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+        <View
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:elevation="12dp"
+            android:background="@drawable/scrim_light"
+            android:layout_alignTop="@+id/iv_movie_poster"
+            android:layout_alignStart="@+id/iv_movie_poster" />
+
+        <android.support.v7.widget.CardView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_backdrop"
+            android:layout_toRightOf="@id/iv_movie_poster"
+            android:layout_margin="8dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_movie_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:maxLines="2"
+                    android:textSize="18sp"
+                    android:layout_margin="6dp"/>
+
+                <ImageView
+                    android:id="@+id/iv_releaseDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_date_range_black_18dp"
+                    android:layout_below="@id/tv_movie_title"
+                    android:layout_margin="4dp"/>
+                <TextView
+                    android:id="@+id/tv_movie_release_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_below="@id/tv_movie_title"
+                    android:layout_toRightOf="@id/iv_releaseDate"/>
+
+                <ImageView
+                    android:id="@+id/iv_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_star_rate_black_18dp"
+                    android:layout_margin="4dp"
+                    android:layout_below="@id/iv_releaseDate"/>
+                <TextView
+                    android:id="@+id/tv_movie_user_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_movie_release_date"
+                    android:layout_toRightOf="@id/iv_rating" />
+
+
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_movie_poster"
+            android:layout_margin="8dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Overview:"
+                    android:layout_margin="6dp"
+                    android:textSize="16sp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:padding="4dp"
+                    android:background="#c0c0c0"/>
+
+                <TextView
+                    android:id="@+id/tv_movie_overview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:textSize="12sp"/>
+
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+
+</ScrollView>

@@ -2,22 +2,28 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/iv_poster"
+        android:transitionName="movie poster"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true" />
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/scrim"/>
     <TextView
         android:id="@+id/tv_movie_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:textSize="12sp"/>
+        android:padding="2dp"
+        android:layout_marginBottom="2dp"
+        android:textSize="12sp"
+        android:textColor="#ffffff"
+        android:gravity="center"/>
 
 </FrameLayout>

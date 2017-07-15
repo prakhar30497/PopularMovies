@@ -21,6 +21,7 @@ public final class MovieUtils {
     private static final String LOG_TAG = MovieUtils.class.getSimpleName();
 
     public static final String Base_Poster_Url = "http://image.tmdb.org/t/p/w185/";
+    public static final String Base_Backdrop_Url = "http://image.tmdb.org/t/p/w500/";
 
     private MovieUtils(){
     }
@@ -34,14 +35,16 @@ public final class MovieUtils {
 
             for(int i=0;i<results.length();i++){
                 JSONObject currentMovie = results.getJSONObject(i);
-                String userRating = currentMovie.getString("vote_count");
+                String userRating = currentMovie.getString("vote_average");
                 String releaseDate = currentMovie.getString("release_date");
                 String overview = currentMovie.getString("overview");
                 String title = currentMovie.getString("original_title");
                 String poster = currentMovie.getString("poster_path");
+                String backdrop = currentMovie.getString("backdrop_path");
                 poster = Base_Poster_Url + poster;
+                backdrop = Base_Backdrop_Url + backdrop;
 
-                Movie movie = new Movie(title, poster, overview, releaseDate, userRating);
+                Movie movie = new Movie(title, poster, overview, releaseDate, userRating, backdrop);
                 movies.add(movie);
             }
         }catch (JSONException e){

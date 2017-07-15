@@ -19,11 +19,17 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
     private List<Movie> mMovies;
+    final private MovieItemClickHandler mOnClickListener;
 
-    public MovieAdapter(List<Movie> mMovies) {
-        this.mMovies = mMovies;
+
+    public MovieAdapter(List<Movie> movies, MovieItemClickHandler listener) {
+        mMovies = movies;
+        mOnClickListener = listener;
     }
 
+    public interface MovieItemClickHandler{
+        public void onListItemClick(Movie clickedMovie);
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_list_item, parent, false);
@@ -40,8 +46,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         Picasso.with(context)
                 .load(movie.getPoster())
-                .centerCrop()
                 .into(holder.mPoster);
+
+        holder.mView.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                mOnClickListener.onListItemClick(holder.mMovie);
+            }
+        });
 
     }
     @Override
@@ -49,7 +62,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         return mMovies.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public final View mView;
         public Movie mMovie;
@@ -61,10 +74,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             mView = view;
             mPoster = (ImageView) view.findViewById(R.id.iv_poster);
             mTitle = (TextView) view.findViewById(R.id.tv_movie_name);
+            view.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View v) {
+            mOnClickListener.onListItemClick(mMovie);
+        }
     }
     public void setMovieData(List<Movie> movies){
         mMovies = movies;
+        notifyDataSetChanged();
     }
 }

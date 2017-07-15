@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">PopularMovies</string>
     <string name="no_movies_found">No Movies Found.</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="movie_poster">movie poster</string>
 </resources>

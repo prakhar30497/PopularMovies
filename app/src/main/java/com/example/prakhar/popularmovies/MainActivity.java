@@ -1,11 +1,17 @@
 package com.example.prakhar.popularmovies;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -15,7 +21,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieItemClickHandler{
 
     private RecyclerView recyclerView;
     private MovieAdapter mAdapter;
@@ -25,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private TextView mErrorMessage;
 
     public static final String POPULAR_MOVIES_BASE_URL = "https://api.themoviedb.org/3/movie/popular?";
+    public static final String TOP_RATED_MOVIES_BASE_URL = "https://api.themoviedb.org/3/movie/top_rated?";
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    private String mSortBy = CONSTANTS.MOST_POPULAR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.rv_movies);
         movieList = new ArrayList<>();
-        mAdapter = new MovieAdapter(movieList);
+        mAdapter = new MovieAdapter(movieList, this);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -43,14 +53,14 @@ public class MainActivity extends AppCompatActivity {
         mErrorMessage = (TextView) findViewById(R.id.error_message);
 
         loadMoviesList();
+    }
 
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                Movie movie = movieList.get(position);
-                Toast.makeText(getApplicationContext(), movie.getTitle() + "is selected!", Toast.LENGTH_SHORT).show();
-            }
-        }));
+    @Override
+    public void onListItemClick(Movie movieItem){
+        Intent intent = new Intent(this, MovieDetailsActivity.class);
+        intent.putExtra(CONSTANTS.EXTRA_MOVIE, movieItem);
+        startActivity(intent);
+
     }
 
     private void loadMoviesList() {
@@ -70,8 +80,15 @@ public class MainActivity extends AppCompatActivity {
 
     private String  createMoviesUri(){
         Uri uri = null;
-        uri = Uri.parse(POPULAR_MOVIES_BASE_URL);
-
+        if(mSortBy==CONSTANTS.MOST_POPULAR){
+            uri = Uri.parse(POPULAR_MOVIES_BASE_URL);
+        }
+        else if(mSortBy==CONSTANTS.TOP_RATED){
+            uri = Uri.parse(TOP_RATED_MOVIES_BASE_URL);
+        }
+        else{
+            uri = Uri.parse(POPULAR_MOVIES_BASE_URL);
+        }
         Uri api_uri = null;
         api_uri = uri.buildUpon()
                 .appendQueryParameter("api_key", "de5ea3329b4b66e12ecf3e79737fa82b")
@@ -93,7 +110,9 @@ public class MainActivity extends AppCompatActivity {
             if (params.length == 0) {
                 return null;
             }
-
+            else{
+                Log.d(LOG_TAG, "Movie list returned");
+            }
             List<Movie> movies = MovieUtils.fetchMovieData(params[0]);
             return movies;
         }
@@ -110,5 +129,30 @@ public class MainActivity extends AppCompatActivity {
                 showErrorMessage();
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.sort_by_most_popular:
+                mSortBy=CONSTANTS.MOST_POPULAR;
+                loadMoviesList();
+                break;
+
+            case R.id.sort_by_top_rated:
+                mSortBy=CONSTANTS.TOP_RATED;
+                loadMoviesList();
+                break;
+
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

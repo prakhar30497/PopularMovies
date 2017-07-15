@@ -1,19 +1,57 @@
 package com.example.prakhar.popularmovies;
 
-public class Movie {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Movie implements Parcelable{
     private String mTitle;
     private String mPoster;
     private String mOverview;
     private String mReleaseDate;
     private String mUserRating;
+    private String mBackdrop;
 
-    public Movie(String title, String poster, String overview, String releaseDate, String userRating){
+    private Movie(){
+
+    }
+
+    public Movie(String title, String poster, String overview, String releaseDate, String userRating, String backdrop){
         mTitle = title;
         mPoster = poster;
         mOverview = overview;
         mReleaseDate = releaseDate;
         mUserRating = userRating;
+        mBackdrop = backdrop;
     }
+
+    protected Movie(Parcel in) {
+        mTitle = in.readString();
+        mPoster = in.readString();
+        mOverview = in.readString();
+        mReleaseDate = in.readString();
+        mUserRating = in.readString();
+        mBackdrop = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            Movie movie = new Movie();
+            movie.mTitle = in.readString();
+            movie.mPoster = in.readString();
+            movie.mOverview = in.readString();
+            movie.mReleaseDate = in.readString();
+            movie.mUserRating = in.readString();
+            movie.mBackdrop = in.readString();
+
+            return movie;
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     public String getTitle(){
         return mTitle;
@@ -29,5 +67,23 @@ public class Movie {
     }
     public String getUserRating(){
         return mUserRating;
+    }
+    public String getBackdrop(){
+        return mBackdrop;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mTitle);
+        dest.writeString(mPoster);
+        dest.writeString(mOverview);
+        dest.writeString(mReleaseDate);
+        dest.writeString(mUserRating);
+        dest.writeString(mBackdrop);
     }
 }
