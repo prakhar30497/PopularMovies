@@ -23,7 +23,6 @@
 
         <ImageView
             android:id="@+id/iv_movie_poster"
-            android:transitionName="movie poster"
             android:layout_width="100dp"
             android:layout_height="150dp"
             android:layout_marginLeft="8dp"
