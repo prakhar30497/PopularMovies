@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
         Uri api_uri = null;
         api_uri = uri.buildUpon()
-                .appendQueryParameter(CONSTANTS.API_KEY, CONSTANTS.API_KEY_VALUE)
+                .appendQueryParameter(CONSTANTS.API_KEY, CONSTANTS.MY_MOVIE_DB_API_KEY)
                 .build();
 
         return api_uri.toString();
