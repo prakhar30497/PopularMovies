@@ -4,3 +4,5 @@ It displays a scrolling grid of movie trailers, launches a details screen whenev
 
 ## Screenshots
 ![device-2018-04-25-195947](https://user-images.githubusercontent.com/20808580/39392168-d63ee41c-4ace-11e8-98d1-c9213da80567.png)
+
+![device-2018-04-25-200443](https://user-images.githubusercontent.com/20808580/39392211-99c25d42-4acf-11e8-94b3-5328677a9969.png)
