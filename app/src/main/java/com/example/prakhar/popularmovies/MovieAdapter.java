@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
 
     private List<Movie> mMovies;
     final private MovieItemClickHandler mOnClickListener;
@@ -30,15 +30,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     public interface MovieItemClickHandler{
         public void onListItemClick(Movie clickedMovie);
     }
+
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_list_item, parent, false);
 
-        return new ViewHolder(view);
+        return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         Context context = holder.mView.getContext();
         Movie movie = mMovies.get(position);
         holder.mMovie = movie;
@@ -57,19 +58,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         });
 
     }
+
     @Override
     public int getItemCount() {
         return mMovies.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public final View mView;
         public Movie mMovie;
         public ImageView mPoster;
         public TextView mTitle;
 
-        public ViewHolder(View view){
+        public MyViewHolder(View view){
             super(view);
             mView = view;
             mPoster = (ImageView) view.findViewById(R.id.iv_poster);

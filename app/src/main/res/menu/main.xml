@@ -20,6 +20,9 @@
                 <item
                     android:id="@+id/sort_by_top_rated"
                     android:title="@string/top_rated"/>
+                <item
+                    android:id="@+id/sort_by_favourites"
+                    android:title="Favourites"/>
             </group>
         </menu>
 

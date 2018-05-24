@@ -1,7 +1,11 @@
 package com.example.prakhar.popularmovies;
 
 import android.app.ActivityOptions;
+import android.app.LoaderManager;
+import android.content.AsyncTaskLoader;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -17,11 +21,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.prakhar.popularmovies.data.MovieContract;
+import com.example.prakhar.popularmovies.data.MovieDBHelper;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieItemClickHandler{
+public class MainActivity extends AppCompatActivity implements
+        MovieAdapter.MovieItemClickHandler, LoaderManager.LoaderCallbacks<List<Movie>>{
+
+    private static final int MOVIE_LOADER_ID = 1;
+    private static final int FAVOURITES_LOADER_ID = 2;
 
     private RecyclerView recyclerView;
     private MovieAdapter mAdapter;
@@ -29,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private ProgressBar mLoadingIndicator;
     private TextView mErrorMessage;
+
+    public String MoviesUrl = null;
 
     public static final String POPULAR_MOVIES_BASE_URL = "https://api.themoviedb.org/3/movie/popular?";
     public static final String TOP_RATED_MOVIES_BASE_URL = "https://api.themoviedb.org/3/movie/top_rated?";
@@ -65,7 +78,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private void loadMoviesList() {
         showMoviesDataView();
-        new FetchMoviesTask().execute(createMoviesUri());
+        LoaderManager loaderManager = getLoaderManager();
+        loaderManager.initLoader(MOVIE_LOADER_ID, null, this);
     }
 
     private void showMoviesDataView() {
@@ -78,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mErrorMessage.setVisibility(View.VISIBLE);
     }
 
-    private String  createMoviesUri(){
+    private String createMoviesUri(){
         Uri uri = null;
         if(mSortBy==CONSTANTS.MOST_POPULAR){
             uri = Uri.parse(POPULAR_MOVIES_BASE_URL);
@@ -91,46 +105,41 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
         Uri api_uri = null;
         api_uri = uri.buildUpon()
-                .appendQueryParameter(CONSTANTS.API_KEY, CONSTANTS.MY_MOVIE_DB_API_KEY)
+                .appendQueryParameter(CONSTANTS.API_KEY, BuildConfig.THE_MOVIE_DB_API_TOKEN)
                 .build();
 
-        return api_uri.toString();
+        MoviesUrl = api_uri.toString();
+
+        return MoviesUrl;
     }
 
-    public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>>{
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
+    @Override
+    public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
+        if(id == MOVIE_LOADER_ID){
+            return new MovieLoader(this, createMoviesUri());
         }
-
-        @Override
-        protected List<Movie> doInBackground(String... params) {
-            if (params.length == 0) {
-                return null;
-            }
-            else{
-                Log.d(LOG_TAG, "Movie list returned");
-            }
-            List<Movie> movies = MovieUtils.fetchMovieData(params[0]);
-            return movies;
+        else if(id == FAVOURITES_LOADER_ID){
+            return new FavouritesLoader(this, MovieContract.MovieEntry.CONTENT_URI);
         }
+        return null;
+    }
 
-        @Override
-        protected void onPostExecute(List<Movie> movies) {
-            super.onPostExecute(movies);
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if(movies != null){
-                showMoviesDataView();
-                mAdapter.setMovieData(movies);
-            }
-            else{
-                showErrorMessage();
-            }
+    @Override
+    public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> data) {
+        mLoadingIndicator.setVisibility(View.GONE);
+        if(data != null){
+            showMoviesDataView();
+            mAdapter.setMovieData(data);
+        }
+        else{
+            showErrorMessage();
         }
     }
 
+    @Override
+    public void onLoaderReset(Loader<List<Movie>> loader) {
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -141,14 +150,20 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.sort_by_most_popular:
-                mSortBy=CONSTANTS.MOST_POPULAR;
-                loadMoviesList();
+                mSortBy = CONSTANTS.MOST_POPULAR;
+                getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
                 break;
 
             case R.id.sort_by_top_rated:
-                mSortBy=CONSTANTS.TOP_RATED;
-                loadMoviesList();
+                mSortBy = CONSTANTS.TOP_RATED;
+                getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
                 break;
+
+            case R.id.sort_by_favourites:
+                mSortBy = CONSTANTS.FAVOURITE;
+                getLoaderManager().restartLoader(FAVOURITES_LOADER_ID, null, this);
+                break;
+
 
             default:
                 break;

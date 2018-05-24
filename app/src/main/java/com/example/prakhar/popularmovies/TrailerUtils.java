@@ -17,41 +17,32 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class MovieUtils {
-    private static final String LOG_TAG = MovieUtils.class.getSimpleName();
+public class TrailerUtils {
 
-    public static final String Base_Poster_Url = "http://image.tmdb.org/t/p/w185/";
-    public static final String Base_Backdrop_Url = "http://image.tmdb.org/t/p/w500/";
+    private static final String LOG_TAG = TrailerUtils.class.getSimpleName();
 
-    private MovieUtils(){
+    private TrailerUtils(){
     }
 
-    private static List<Movie> extractFeatureFromJson(String movieJson){
-        List<Movie> movies = new ArrayList<>();
+    private static List<Trailer> extractFeatureFromJson(String trailorJson){
+        List<Trailer> trailers = new ArrayList<>();
 
         try{
-            JSONObject jsonObject = new JSONObject(movieJson);
+            JSONObject jsonObject = new JSONObject(trailorJson);
             JSONArray results = jsonObject.getJSONArray("results");
 
             for(int i=0;i<results.length();i++){
-                JSONObject currentMovie = results.getJSONObject(i);
-                int id = currentMovie.getInt("id");
-                String userRating = currentMovie.getString("vote_average");
-                String releaseDate = currentMovie.getString("release_date");
-                String overview = currentMovie.getString("overview");
-                String title = currentMovie.getString("original_title");
-                String poster = currentMovie.getString("poster_path");
-                String backdrop = currentMovie.getString("backdrop_path");
-                poster = Base_Poster_Url + poster;
-                backdrop = Base_Backdrop_Url + backdrop;
+                JSONObject currentTrailor = results.getJSONObject(i);
+                String key = currentTrailor.getString("key");
+                String name = currentTrailor.getString("name");
 
-                Movie movie = new Movie(id, title, poster, overview, releaseDate, userRating, backdrop);
-                movies.add(movie);
+                Trailer trailer = new Trailer(key, name);
+                trailers.add(trailer);
             }
         }catch (JSONException e){
-            
+
         }
-        return movies;
+        return trailers;
     }
 
     private static URL createUrl(String stringUrl) {
@@ -114,7 +105,7 @@ public final class MovieUtils {
         return output.toString();
     }
 
-    public static List<Movie> fetchMovieData(String requestUrl){
+    public static List<Trailer> fetchTrailerData(String requestUrl){
         try{
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -130,8 +121,8 @@ public final class MovieUtils {
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
 
-        List<Movie> movies = extractFeatureFromJson(jsonResponse);
-        return movies;
+        List<Trailer> trailers = extractFeatureFromJson(jsonResponse);
+        return trailers;
     }
 
 }
