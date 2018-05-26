@@ -10,9 +10,9 @@ import com.example.prakhar.popularmovies.data.MovieContract;
 import com.example.prakhar.popularmovies.data.MovieContract.MovieEntry;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MovieDB {
-    public static final String AUTHORITY_Uri = "content://" + MovieContract.AUTHORITY;
 
     public boolean isMovieFavorite(ContentResolver contentResolver, int id){
         boolean r = false;
@@ -38,13 +38,13 @@ public class MovieDB {
     }
 
     public void removeMovie(ContentResolver contentResolver, int id){
-        Uri uri = Uri.parse(AUTHORITY_Uri + "/" + id);
+        Uri uri = Uri.parse(MovieEntry.CONTENT_URI + "/" + id);
         contentResolver.delete(uri, null, new String[]{id + ""});
     }
 
-    public ArrayList<Movie> getFavoriteMovies(ContentResolver contentResolver){
-        Uri uri = Uri.parse(AUTHORITY_Uri + "/movies");
-        Cursor cursor = contentResolver.query(uri, null, null, null, null, null);
+    public List<Movie> getFavoriteMovies(ContentResolver contentResolver){
+
+        Cursor cursor = contentResolver.query(MovieEntry.CONTENT_URI, null, null, null, null, null);
         ArrayList <Movie> movies = new ArrayList<>();
 
         if (cursor != null && cursor.moveToFirst()){

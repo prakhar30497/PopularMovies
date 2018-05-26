@@ -3,9 +3,12 @@ package com.example.prakhar.popularmovies;
 import android.app.ActivityOptions;
 import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements
     private static final int MOVIE_LOADER_ID = 1;
     private static final int FAVOURITES_LOADER_ID = 2;
 
+    private static final String CALLBACK = "callback";
+
     private RecyclerView recyclerView;
     private MovieAdapter mAdapter;
     private List<Movie> movieList;
@@ -54,6 +59,12 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(savedInstanceState != null){
+            mSortBy = savedInstanceState.getString(CALLBACK);
+            Log.d("SORT_BY", mSortBy);
+        }
+
+
         recyclerView = (RecyclerView) findViewById(R.id.rv_movies);
         movieList = new ArrayList<>();
         mAdapter = new MovieAdapter(movieList, this);
@@ -65,7 +76,17 @@ public class MainActivity extends AppCompatActivity implements
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progressBar);
         mErrorMessage = (TextView) findViewById(R.id.error_message);
 
-        loadMoviesList();
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        if(networkInfo!=null && networkInfo.isConnected()){
+            loadMoviesList();
+        }
+        else{
+            mLoadingIndicator.setVisibility(View.GONE);
+            mErrorMessage.setText("No Internet Connection");
+        }
+
     }
 
     @Override
@@ -87,17 +108,24 @@ public class MainActivity extends AppCompatActivity implements
         recyclerView.setVisibility(View.VISIBLE);
     }
     private void showErrorMessage() {
-        recyclerView.setVisibility(View.INVISIBLE);
-        mErrorMessage.setText("Error!");
+        recyclerView.setVisibility(View.GONE);
         mErrorMessage.setVisibility(View.VISIBLE);
+        mErrorMessage.setText("Error!");
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(CALLBACK, mSortBy);
     }
 
     private String createMoviesUri(){
         Uri uri = null;
-        if(mSortBy==CONSTANTS.MOST_POPULAR){
+        if(mSortBy.equals(CONSTANTS.MOST_POPULAR)){
             uri = Uri.parse(POPULAR_MOVIES_BASE_URL);
         }
-        else if(mSortBy==CONSTANTS.TOP_RATED){
+        else if(mSortBy.equals(CONSTANTS.TOP_RATED)){
             uri = Uri.parse(TOP_RATED_MOVIES_BASE_URL);
         }
         else{
@@ -139,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLoaderReset(Loader<List<Movie>> loader) {
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);

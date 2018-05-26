@@ -10,7 +10,7 @@ import com.example.prakhar.popularmovies.data.MovieContract.MovieEntry;
 public class MovieDBHelper extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "movies.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 12;
 
     public MovieDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

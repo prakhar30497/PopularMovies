@@ -88,7 +88,7 @@ public final class MovieUtils {
             }
 
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retreiving the earthquake json results.", e);
+            Log.e(LOG_TAG, "Problem retreiving the movie json results.", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();

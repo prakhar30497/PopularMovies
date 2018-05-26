@@ -11,8 +11,6 @@ public class MovieLoader extends AsyncTaskLoader<List<Movie>> {
     private static final String LOG_TAG = MovieLoader.class.getName();
     private String mUrl;
 
-    private ProgressBar mLoadingIndicator;
-
     public MovieLoader(Context context, String url) {
         super(context);
         mUrl = url;

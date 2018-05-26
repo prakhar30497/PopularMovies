@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         card_view:contentPadding="12dp"
         card_view:cardElevation="4dp"
-        card_view:cardCornerRadius="4dp"
+        card_view:cardCornerRadius="@dimen/secondary_corner_radius"
         android:layout_margin="8dp">
 
         <LinearLayout
@@ -24,9 +24,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Author"
+                android:fontFamily="sans-serif-condensed"
                 android:textColor="#2E7D32"
                 android:textStyle="bold"
-                android:textSize="16sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:id="@+id/tv_review_content"
@@ -35,7 +36,9 @@
                 android:padding="4dp"
                 android:maxLines="3"
                 android:ellipsize="end"
-                android:text="bhdjcah x acfnsacuacny cayc gyuangxy aoygx fnax agoyfgxy asoxf gax a"/>
+                android:textSize="@dimen/small_text_size"
+                android:text="bhdjcah x acfnsacuacny cayc gyuangxy aoygx fnax agoyfgxy asoxf gax a"
+                android:fontFamily="sans-serif-smallcaps"/>
 
             <TextView
                 android:id="@+id/tv_review_expand"
@@ -43,7 +46,8 @@
                 android:textColor="#43A047"
                 android:layout_height="wrap_content"
                 android:text="Show More"
-                android:textSize="14sp"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="16sp"
                 android:clickable="true"/>
 
         </LinearLayout>

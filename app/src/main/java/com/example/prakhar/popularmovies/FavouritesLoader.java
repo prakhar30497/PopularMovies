@@ -14,8 +14,6 @@ public class FavouritesLoader extends AsyncTaskLoader<List<Movie>>{
     private static final String LOG_TAG = MovieLoader.class.getName();
     private Uri mUrl;
 
-    private ProgressBar mLoadingIndicator;
-
     public FavouritesLoader(Context context, Uri url) {
         super(context);
         mUrl = url;
@@ -32,6 +30,7 @@ public class FavouritesLoader extends AsyncTaskLoader<List<Movie>>{
         if(mUrl == null)
             return null;
 
-        return (List<Movie>) getContext().getContentResolver().query(mUrl, MovieContract.MovieEntry.MOVIE_COLUMNS, null, null, null);
+        MovieDB movieDb = new MovieDB();
+        return movieDb.getFavoriteMovies(getContext().getContentResolver());
     }
 }

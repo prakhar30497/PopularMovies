@@ -69,10 +69,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // add back arrow to toolbar
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent startingActivityIntent = getIntent();
         if(startingActivityIntent != null){
@@ -111,6 +108,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
                 .load(mMovie.getPoster()).into(poster);
 
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        
+        updateFab();
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +127,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
                     if(toast!=null){
                         toast.cancel();
                     }
-                    Toast.makeText(getApplicationContext(), m, Toast.LENGTH_SHORT).show();
+                    toast.makeText(getApplicationContext(), m, Toast.LENGTH_SHORT).show();
                 }
                 else {
                     m = "Added to Favourites";
@@ -138,7 +137,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
                     if(toast!=null){
                         toast.cancel();
                     }
-                    Toast.makeText(getApplicationContext(), m, Toast.LENGTH_SHORT).show();
+                    toast.makeText(getApplicationContext(), m, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -178,6 +177,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         trailer_header = (TextView) findViewById(R.id.tv_trailer_header);
         review_header = (TextView) findViewById(R.id.tv_review_header);
 
+    }
+
+    private void updateFab() {
+        MovieDB movieDb = new MovieDB();
+
+        if(movieDb.isMovieFavorite(getContentResolver(), mMovie.getId())){
+            floatingActionButton.setImageDrawable(getDrawable(R.drawable.fav_remove));
+        } else {
+            floatingActionButton.setImageDrawable(getDrawable(R.drawable.fav_add));
+        }
     }
 
     private void applyPalette(Palette palette) {

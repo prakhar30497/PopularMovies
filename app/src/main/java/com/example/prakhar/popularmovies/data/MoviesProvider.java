@@ -118,6 +118,10 @@ public class MoviesProvider extends ContentProvider{
                 count = mDb.delete(TABLE_NAME, selection, selectionArgs);
                 break;
             }
+            case MOVIE_DETAILS: {
+                count = mDb.delete(TABLE_NAME, COLUMN_ID + " = ?", selectionArgs);
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
