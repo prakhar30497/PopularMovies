@@ -11,7 +11,7 @@ import com.example.prakhar.popularmovies.data.MovieContract;
 import java.util.List;
 
 public class FavouritesLoader extends AsyncTaskLoader<List<Movie>>{
-    private static final String LOG_TAG = MovieLoader.class.getName();
+    private static final String LOG_TAG = FavouritesLoader.class.getName();
     private Uri mUrl;
 
     public FavouritesLoader(Context context, Uri url) {
